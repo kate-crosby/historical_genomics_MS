@@ -4,7 +4,7 @@
 \newcommand{\X}{\textcolor{red}{\bf X\,}}
 \newcommand{\citex}{\textcolor{red}{\bf (CITE)\,}}
 \newcommand{\jri}[1]{\textcolor{red}{ \emph{ #1}} }
-\newcommand{\kc}[1]{\textcolor{blue}{ \emph{ #1}} }
+\newcommand{\kc}[1]{\textcolor{violet}{ \emph{ #1}} }
 
 \title{The dynamics of selection and adaptive diversity in modern maize inbred lines}
 
@@ -102,10 +102,12 @@ From the NAM RILs, we first dropped all alleles that were not biallelic or conta
 SNP data was imputed to completeness in order to facilitate forward stepwise regression (see section further down) and model comparison.  
 
 Using the imputed data, we first performed regression of each SNP (by chromosome) to trait residuals, conservatively adjusted all SNP p-values using Bonnferroni correction, and chose the top 500 SNPs on each chromosome (the SNPs with the lowest p-values). 
-Forward stepwise regression was then performed for the 500 SNPs with the lowest p-values (by chromosome) to obtain SNP effect sizes for all 37 traits residuals \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/single_step_NAM_script_2.R}{(stepwise regression script available from github)}. 
-The SNPs from each chromosome forward stepwise model were then further filtered by choosing the SNP with the lowest p-value within a 100Mb window \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/filter_snp_effects_script_3.R}{(script to filter SNPs by chromosome available from github)}. 
-This set of further filtered SNPs was carried forward and regressed again by chromosome to trait residuals in order to obtain SNP effect sizes \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/final_effects_script_4.R}{(script to index 500 SNPs, pull out by index and regress again available on github)}.
-One of the motivations for performing all of these single and stepwise regressions by chromosome as opposed to genome wide was to minimize the effect of large clusters of SNPs of significant effect (or large QTL) on a given chromosome, as the overall goal of this method is to isolate even the smallest signals of polygenic adaptation.
+Forward stepwise regression was then performed for the 500 SNPs with the lowest p-values (by chromosome) to obtain SNP effect sizes for all 37 traits residuals \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/single_step_NAM_script_2.R}{(script available from github)}. 
+The SNPs from each chromosome forward stepwise model were then further filtered by choosing the SNP with the lowest p-value within a 100Mb window \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/filter_snp_effects_script_3.R}{(script available from github)}. 
+This set of further filtered SNPs was carried forward and regressed again by chromosome to trait residuals in order to obtain effect sizes from window filtered SNPs \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/final_effects_script_4.R}{(script available from github)}. 
+From these regressions we subsetted down only those SNPs that had a p-value $>$ 0.05 to use in $Q_x$ \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/script5.R}{(script available from github)}.
+
+One of the motivations for performing all of these single and stepwise regressions by chromosome as opposed to genome wide was to minimize the effect of large clusters of SNPs of significant effect (or large QTL) on a given chromosome; as many traits in the NAM have known large-effect QTL on one or two chromosomes. The overall goal of this method is to isolate even the smallest signals of polygenic adaptation. 
 
 Second, using our test population (the Ames panel), the frequencies of those matching SNPs are also calculated. 
 Neutral evolution, like in BayEnv is modelled using a covariance matrix of randomly sampled markers to build a multivariate distribution (simulating the genomic background), and this is generally how the method differs from $Q_{ST}$-$F_{ST}$ approaches.
