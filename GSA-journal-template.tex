@@ -1,5 +1,6 @@
 \documentclass[9pt,twocolumn,twoside]{gsajnl}
 \articletype{inv} % article type
+\usepackage{hyperref}
 \newcommand{\X}{\textcolor{red}{\bf X\,}}
 \newcommand{\citex}{\textcolor{red}{\bf (CITE)\,}}
 \newcommand{\jri}[1]{\textcolor{red}{ \emph{ #1}} }
@@ -89,23 +90,31 @@ Given that there was approximately 1 marker/1 Mb \kc{orwhatever} these markers a
 The covariance matrix is used to estimate a neutral (drift) model of evolution across environments, in this case temporal environments. 
 Thus, any Bayes Factor for a SNP that deviates substantially from expected neutral frequencies has potentially experienced and responded to selection through time.  While there is no strict significance cut-off, large $\beta$s for many SNPs in the same genomic region indicate past selection.
 Each inbred line with a release year within a cluster was effectively treated as a population. 
-While the approach of treating individuals as populations is not typical of other example studies using BayEnv, it deals directly with the issue of population structure - by testing each SNP in each inbred line. 
+While the approach of treating individuals as populations is not typical of other example studies using BayEnv, it deals directly with the issue of population structure - by testing each SNP in each inbred line (as if it were a population). 
 
 The second approach scans the genome for signals of polygenic adaptation of quantitative traits. This method termed ``$Q_x$'', is first described in \verb|\citep{berg2014population}| and is a novel, multi-variate approach that extends from the univariate $Q_{ST}$ and $F_{ST}$ tests for divergent selection and adaptation \kc{Latta 1998, reviewed in McKay and Latta 2002}. 
 As this approach is relatively new, we describe our approach below.
 
 First, GWAS hits (SNP effect sizes) in a mapping population are used to pinpoint SNPs in the genome that significantly contribute to additive genetic variation $V_A$ in quantitative traits, the frequency of those SNPs that have is calculated in the mapping panel. 
-To obtain SNP effect sizes, we performed a custom forward stepwise GWAS for the RILs (recombinant inbred lines) produced from 26 half-sib families from the nested associated mapping (NAM) maize population, which also had GBS 2.7 data available for it.
-We used the chromosome specific residuals from \verb|\citep{Wallace:2014db}| (methods to obtain chromosome specific residuals described therein) to perform this custom GWAS on 37 quantitative traits. 
-From the NAM RILs, we first dropped all alleles that were not biallelic and imputed the data to complete cases (for X markers) based on allele frequency for a given SNP. Using this data, we regressed each individual SNP to the trait
-Second, using our reference population - the Ames panel, the frequencies of those matching SNPs are also calculated. 
+To obtain SNP effect sizes, we performed a custom forward stepwise GWAS for the RILs (recombinant inbred lines) produced from 26 half-sib families from the nested associated mapping (NAM) maize population, which also have GBS 2.7 marker coverage.
+We used the chromosome specific residuals of 37 traits from \verb|\citep{Wallace:2014db}| (methods to obtain chromosome specific residuals described therein) to perform this custom GWAS. 
+From the NAM RILs, we first dropped all alleles that were not biallelic or contained indels and imputed the data to complete cases \kc{(for X markers)} based on allele frequency for a given SNP \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/bulk_imputation_script1.R}{(script available from github)}. 
+SNP data was imputed to completeness in order to facilitate forward stepwise regression (see section further down) and model comparison.  
+
+Using the imputed data, we first performed regression of each SNP (by chromosome) to trait residuals, conservatively adjusted all SNP p-values using Bonnferroni correction, and chose the top 500 SNPs on each chromosome (the SNPs with the lowest p-values). 
+Forward stepwise regression was then performed for the 500 SNPs with the lowest p-values (by chromosome) to obtain SNP effect sizes for all 37 traits residuals \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/single_step_NAM_script_2.R}{(stepwise regression script available from github)}. 
+The SNPs from each chromosome forward stepwise model were then further filtered by choosing the SNP with the lowest p-value within a 100Mb window \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/filter_snp_effects_script_3.R}{(script to filter SNPs by chromosome available from github)}. 
+This set of further filtered SNPs was carried forward and regressed again by chromosome to trait residuals in order to obtain SNP effect sizes \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/final_effects_script_4.R}{(script to index 500 SNPs, pull out by index and regress again available on github)}.
+One of the motivations for performing all of these single and stepwise regressions by chromosome as opposed to genome wide was to minimize the effect of large clusters of SNPs of significant effect (or large QTL) on a given chromosome, as the overall goal of this method is to isolate even the smallest signals of polygenic adaptation.
+
+Second, using our test population (the Ames panel), the frequencies of those matching SNPs are also calculated. 
 Neutral evolution, like in BayEnv is modelled using a covariance matrix of randomly sampled markers to build a multivariate distribution (simulating the genomic background), and this is generally how the method differs from $Q_{ST}$-$F_{ST}$ approaches.
-If those SNPs are at higher frequency in the reference panel than what is expected under the multivariate distribution (the genomic background), then we conclude that there is a signal of polygenic adaptation for the phenotypic trait of interest.
+If those SNPs with large effect sizes are at higher frequency in the reference panel than what is expected under the multivariate distribution (the genomic background), then we conclude that there is a signal of polygenic adaptation for the phenotypic trait of interest.
 In the univariate scenario (for a given quantitative trait), divergent selection or local adaptation are processes that typically lead to $Q_{ST}$ values > $F_{ST}$ values for both neutral markers and QTLs.
 $Q_x$ is a statistic produced for each genetic cluster.
 
  
-not different from that expected given GWAS effect sizes and observed allele frequencies given a neutral covariance matrix (simulated from allel
+P-values of populations that do not fall beyond the asymptotic $Q_x$ value are not different from that expected value given GWAS SNP effect sizes and observed allele frequencies given a neutral covariance matrix (simulated from allel
 
 We performed tests within each genetic cluster
 
@@ -143,7 +152,7 @@ We isolated and identified six genetic cluster from the Ames panel (Fig. 1). Clu
 
 
 \section*{Acknowledgements}
-Financial support for this work came from NSF grant IOS-1238014, USDA grant 2009-65300-05668, and DuPont Pioneer.  We'd like to thank DuPont Pioneer as well for their kind support gathering information about years of release. We thank Graham Coop, James Holland, Edward Buckler, \X and \X reviewers for helpful discussion. 
+Financial support for this work came from NSF grant IOS-1238014, USDA grant 2009-65300-05668, and DuPont Pioneer.  We'd like to thank DuPont Pioneer as well for their kind support gathering information about years of release. We thank Graham Coop, Jeremy Berg, James Holland, Edward Buckler, \X and \X reviewers for helpful discussion. 
 
 \bibliography{example-bibliography}
 
