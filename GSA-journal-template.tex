@@ -74,20 +74,27 @@ We focus narrowly on an inbred line's year release date to pinpoint these signat
 
 \section*{Materials and Methods}
 
-In order to examine temporal selection through time we obtained the exact release dates of 823 public maize inbred lines, using a variety of sources including: Gerdes and Tracy, the USDA database, original line release sheets, or communication with maize breeding experts. Many dates in the USDA although categorized as "Year Released" are in fact the year that the line was acquired. 
+In order to examine temporal selection through time we obtained the exact release dates of 823 public maize inbred lines, using a variety of sources including: Gerdes and Tracy, the USDA database, original line release sheets, or communication with maize breeding experts. Many dates in the USDA although categorized as "Year Released" are the year that the line was acquired. 
+The release date indicates the year that line was released to breeders in order to propagate hybrids.
+First we grouped inbred lines according to their broad genetic cluster (or 'heterotic group') using principal components analysis (PCA) using the approach described in  \kc{cite plos one G Abraham} or \textit{flashpca} \kc{give githubrepo}. 
+This approach is robust to missing SNP data, and is computationally fast for large datasets.  
+Maize inbred lines within a broad heterotic group were then dated by year of release, any inbred line without a year of release affiliated with it was discarded from further analysis.
+
 
 
 \subsection*{Statistical Analysis} 
 To isolate signals of selection and local adaptation within each genetic cluster of maize inbreds,  we used BayEnv2, which estimates Bayes factors, and $\beta$ broadly approximates the parameter $Ns$ according to a linear model. 
-We estimated the neutral covariance matrix of a group of 10,000 GBS markers by choosing every  GBS marker by chromosome. Given that there was approximately  these markers are at the very least not cis-linked, which is key to estimating the covariance matrix. 
-The neutral covariance matrix is used to estimate the null model of evolution that can be expected across environments, in this case temporal environments. 
-Bayes Factors that deviated or fell outside the n
+We estimated the neutral covariance matrix of a subset of polymorphic GBS markers within each genetic cluster. We chose a multiple of the subset of the total GBS markers by chromosome. Given that there was approximately 1 marker/1 Mb \kc{orwhatever} these markers are at the very least not cis-linked, which is key to estimating the covariance matrix \kc{basically I took a medium factor of the total length of each cluster - so every 25th -50th marker, it's not random, that's the point - it minimizes LD}. 
+The covariance matrix is used to estimate a neutral (drift) model of evolution across environments, in this case temporal environments. 
+Thus, any Bayes Factor for a SNP that fell outside the expected neutral frequencies has potentially experienced selection in the past 60-70 years.
 
-First we grouped inbred lines according to their broad genetic cluster (or 'heterotic group') using principal components analysis (PCA) using the approach described in 
-PCA using flashpca \kc{cite plos one G Abraham}.  
-Maize inbred lines within a broad heterotic group were then dated by year of release, any inbred line without a year of release affiliated with it was discarded from further analysis.
+Our second approach effectively scans for polygenic adaptation across a genome in quantitative traits. The approach, described in \kc{Berg and Coop 2014} is novel, multi-variate approach based upon the univariate $Q_{ST}$ and $F_{ST}$ tests for selection and adaptation \kc{Latta 1998, reviewed in McKay and Latta 2002}. 
+The approach takes GWAS hits in a mapping population to pinpoint SNPs in the genome that significantly contribute to additive genetic variation $V_A$ in quantitative traits, and then in a reference population of study assesses whether those SNPs are at frequencies higher or lower than expected under neutral evolution. Neutral evolution, like in BayEnv is modelled using a covariance matrix of markers \kc{blahahahl-lots o fragments -jri says go to shoppe}
+In the univariate scenario (for a given quantitative trait), divergent selection or local adaptation are processes that lead to $Q_{ST}$ > $F_{ST}$ for both neutral markers and QTLs.   
 
-Our second approach effectively scans for  For further information - see \kc{Berg and Coop 2014}
+not different from that expected given GWAS effect sizes and observed allele frequencies given a neutral covariance matrix (simulated from allel
+
+We performed tests within each genetic cluster
 
 Our final approach used a more recent version of \kc{Nielsen} of finding the signature of positive selection using SWeeD
 
@@ -103,7 +110,7 @@ Data for GBS 2.7 are available on PANZEA.\jri{add linke} All scripts are availab
 \section*{Results and Discussion}
 
 \subsection{Identification of heterotic groups}
-
+We isolated and identified six genetic cluster from the Ames panel.
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{6_clusters_placeholder.png}
