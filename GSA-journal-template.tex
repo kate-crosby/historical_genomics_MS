@@ -1,5 +1,4 @@
 \documentclass[9pt,twocolumn,twoside]{gsajnl}
-
 \articletype{inv} % article type
 \newcommand{\X}{\textcolor{red}{\bf X\,}}
 \newcommand{\citex}{\textcolor{red}{\bf (CITE)\,}}
@@ -61,7 +60,7 @@ This is because, save for the inputs of novel variation in the 1950s when hetero
 
 
 The "inbred-hybrid" selection method for propagating and distributing maize hybrids has been in use for over 100 years in many breeding platforms and programs in the United States. 
-This method selects on inbred "combining ability" (under a given selection program) to produce a vigorous and viable hybrid, which is then grown by farmers. 
+This method typically (but not always) selects on inbred "general combining ability" to produce a vigorous and viable hybrid, which is then grown by farmers. These breeding programs may also apply selective agents (drought, disease) to further evaluate combining ability of inbreds.
 The loss of heterosis or "hybrid breakdown" then occurs in the next generation, with a loss in fitness/yield.
 Phenotypic selection by breeders using mapping populations was a common practice prior to the advent of molecular markers. 
 While past studies have found signatures of selection in modern maize: list (cite,cite,cite) these studies have largely fallen short in finding signatures of soft selection and the polygenic basis of likely many traits under the influence of selection. 
@@ -83,16 +82,20 @@ Maize inbred lines within a broad heterotic group were then dated by year of rel
 
 
 \subsection*{Statistical Analysis} 
-To isolate signals of selection and local adaptation within each genetic cluster of maize inbreds,  we used BayEnv2, which estimates Bayes factors, and $\beta$ broadly approximates the parameter $Ns$ according to a linear model. 
+To isolate signals of selection and local adaptation within each genetic cluster of maize inbreds, we used BayEnv2, which estimates Bayes factors ($\beta$), which broadly approximate the parameter $Ns$ (population size and selection coefficient).
 We estimated the neutral covariance matrix of a subset of polymorphic GBS markers within each genetic cluster. We chose a multiple of the subset of the total GBS markers by chromosome. Given that there was approximately 1 marker/1 Mb \kc{orwhatever} these markers are at the very least not cis-linked, which is key to estimating the covariance matrix \kc{basically I took a medium factor of the total length of each cluster - so every 25th -50th marker, it's not random, that's the point - it minimizes LD}. 
 The covariance matrix is used to estimate a neutral (drift) model of evolution across environments, in this case temporal environments. 
-Thus, any Bayes Factor for a SNP that fell outside the expected neutral frequencies has potentially experienced selection in the past 60-70 years.
+Thus, any Bayes Factor for a SNP that deviate substantially from expected neutral frequencies has potentially experienced and responded to selection in the past 60-70 years.  While there is no strict significance cut-off, large $\beta$s for many SNPs in the same genomic region indicate past selection.
+Each inbred line with a release year within a cluster was effectively treated as a population, and while this approach has not been attempted in the literature, it deals directly with the issue of population structure. 
 
-Our second approach effectively scans for polygenic adaptation across a genome in quantitative traits. The approach, described in \kc{Berg and Coop 2014} is novel, multi-variate approach based upon the univariate $Q_{ST}$ and $F_{ST}$ tests for selection and adaptation \kc{Latta 1998, reviewed in McKay and Latta 2002}. 
-As this approach is relatively new, we describe it further below.
-First, GWAS hits in a mapping population are used to pinpoint SNPs in the genome that significantly contribute to additive genetic variation $V_A$ in quantitative traits, the frequency of those SNPs is calculated in the mapping panel. Second, a reference population is used to study assesses whether those SNPs are at frequencies higher or lower than expected under neutral evolution. Neutral evolution, like in BayEnv is modelled using a covariance matrix of randomly sampled markers to build a null multivariate distribution.
+The second approach effectively scans the genome for signals of polygenic adaptation of quantitative traits. This method termed ``$Q_x$'', is first described in \citep{berg2014population} and is a novel, multi-variate approach that extends from the univariate $Q_{ST}$ and $F_{ST}$ tests for selection and adaptation \kc{Latta 1998, reviewed in McKay and Latta 2002}. 
+As this approach is relatively new, we describe our approach below.
+First, GWAS hits (SNP effect sizes) in a mapping population are used to pinpoint SNPs in the genome that significantly contribute to additive genetic variation $V_A$ in quantitative traits, the frequency of those SNPs that have is calculated in the mapping panel. 
+Second, using a reference population, the frequencies of those matching SNPs are also calculated. 
+Neutral evolution, like in BayEnv is modelled using a covariance matrix of randomly sampled markers to build a multivariate distribution (simulating the genomic background), and this is generally how the method differs from $Q_{ST}$-$F_{ST}$ approaches.
+If those SNPs are at higher frequency in the reference panel than what is expected under the multivariate distribution (the genomic background), then .
 In the univariate scenario (for a given quantitative trait), divergent selection or local adaptation are processes that typically lead to $Q_{ST}$ values > $F_{ST}$ values for both neutral markers and QTLs.
-
+$Q_x$ is a statistic produced for all pops. 
 not different from that expected given GWAS effect sizes and observed allele frequencies given a neutral covariance matrix (simulated from allel
 
 We performed tests within each genetic cluster
@@ -120,6 +123,14 @@ We isolated and identified six genetic cluster from the Ames panel.
 \label{fig:6clusters}
 \end{figure}
 
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{manhattan_mania.png}
+\caption{Manhattan plots of scans of selection with Bayenv2 and SweeD
+}
+\label{fig:manhattan}
+\end{figure}
 
 
 \section*{Acknowledgements}
