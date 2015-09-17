@@ -103,7 +103,7 @@ SNP data was imputed to completeness in order to facilitate forward stepwise reg
 
 Using the imputed data, we first performed regression of each SNP (by chromosome) to trait residuals, conservatively adjusted all SNP p-values using Bonnferroni correction, and chose the top 500 SNPs on each chromosome (the SNPs with the lowest p-values). 
 Forward stepwise regression was then performed for the 500 SNPs with the lowest p-values (by chromosome) to obtain SNP effect sizes for all 37 traits residuals \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/single_step_NAM_script_2.R}{(script available from github)}. 
-The SNPs from each chromosome forward stepwise model were then further filtered by choosing the SNP with the lowest p-value within a 100Mb window \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/filter_snp_effects_script_3.R}{(script available from github)}. 
+The SNPs from each chromosome forward stepwise model were then further filtered by choosing the SNP with the lowest p-value within a 100kb window \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/filter_snp_effects_script_3.R}{(script available from github)}. 
 This set of further filtered SNPs was carried forward and regressed again by chromosome to trait residuals in order to obtain effect sizes from window filtered SNPs \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/final_effects_script_4.R}{(script available from github)}. 
 From these regressions we subsetted down only those SNPs that had a p-value $>$ 0.05 to use in $Q_x$ \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/script5.R}{(script available from github)}.
 
