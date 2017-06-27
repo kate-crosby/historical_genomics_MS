@@ -99,7 +99,8 @@ First, GWAS hits (SNP effect sizes) in a mapping population are used to pinpoint
 To obtain SNP effect sizes, we performed a custom forward stepwise GWAS for the RILs (recombinant inbred lines) produced from 26 half-sib families from the nested associated mapping (NAM) maize population, which also have GBS 2.7 marker coverage.
 We used the chromosome specific residuals of 37 traits from \verb|\citep{Wallace:2014db}| (methods to obtain chromosome specific residuals described therein) to perform this custom GWAS. 
 From the NAM RILs, we first dropped all alleles that were not biallelic or contained indels and imputed the data to complete cases \kc{(for X markers)} based on allele frequency for a given SNP \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/bulk_imputation_script1.R}{(script available from github)}. 
-SNP data was imputed to completeness in order to facilitate forward stepwise regression (see section further down) and model comparison.  
+SNP data was imputed to completeness \kc{redo this with Beagle or Bayes} in order to facilitate forward stepwise regression (see section further down) and model comparison.  
+
 
 Using the imputed data, we first performed regression of each SNP (by chromosome) to trait residuals, conservatively adjusted all SNP p-values using Bonnferroni correction, and chose the top 500 SNPs on each chromosome (the SNPs with the lowest p-values). 
 Forward stepwise regression was then performed for the 500 SNPs with the lowest p-values (by chromosome) to obtain SNP effect sizes for all 37 traits residuals \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/single_step_NAM_script_2.R}{(script available from github)}. 
@@ -108,6 +109,8 @@ This set of further filtered SNPs was carried forward and regressed again by chr
 From these regressions we subsetted down only those SNPs that had a p-value $>$ 0.05 to use in $Q_x$ \href{https://github.com/RILAB/historical_genomics/blob/master/scripts/script5.R}{(script available from github)}.
 
 One of the motivations for performing all of these single and stepwise regressions by chromosome as opposed to genome wide was to minimize the effect of large clusters of SNPs of significant effect (or large QTL) on a given chromosome; as many traits in the NAM have known large-effect QTL on one or two chromosomes. The overall goal of this method is to isolate even the smallest signals of polygenic adaptation. 
+
+GWAS, while effective for estimating a marker effect per se for each SNP may over-inflate the value of particular SNPs in a long-shared segment of a haplotype, and the arbitrary cutoff of 500 SNPs and forward stepwise regression means that we are bounding the ordinary least squares (OLS) additive model to a hard ceiling of 500 SNPs. However, OLS has the advantage of being an unbiased method for regression \kc{cite not removing the intercept}. Techniques in statistical or machine learning, such as elasticnet models \kc{cite Hastie}, have the advantage of searching parameter space quickly and using a combination of lasso and ridge penalties, where lasso down weights any 'unimportant' marker coefficient to zero, and ridge forcibly assigns a coefficient to every marker. Loosely summarized, lasso < polygenic model, ridge = highly polygenic model.  
 
 Second, using our test population (the Ames panel), the frequencies of those matching SNPs are also calculated. 
 Neutral evolution, like in BayEnv is modelled using a covariance matrix of randomly sampled markers to build a multivariate distribution (simulating the genomic background), and this is generally how the method differs from $Q_{ST}$-$F_{ST}$ approaches.
